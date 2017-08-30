@@ -2,11 +2,11 @@
 #include "constants.h"
 
 #include <QPainter>
-
 #include <QDebug>
 
 Cube::Cube(qreal x, qreal y, QColor normal, QColor highlight, QGraphicsItem *parent)
-  : QGraphicsItem(parent),
+  : QObject(nullptr),
+    QGraphicsItem(parent),
     is_highlight(false),
     normalColor(normal),
     highlightColor(highlight),
@@ -27,7 +27,6 @@ void Cube::highlight()
 
   changeCorlor(highlightColor);
   is_highlight = true;
-  qDebug() << "Highlighted!!";
 }
 
 void Cube::unhighlight()
@@ -71,17 +70,45 @@ void Cube::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
   painter->setPen(Qt::NoPen);
   painter->fillPath(shape(), QBrush(currentColor));
 
+  if(!text.isEmpty()) {//draw text
+      painter->setFont(font);
+      painter->setPen(Qt::black);
+      painter->drawText(QRectF(-CUBE_SIZE / 2.0, -CUBE_SIZE / 2.0, CUBE_SIZE, CUBE_SIZE),
+                        Qt::AlignCenter, text);
+    }
+
   painter->restore();
 }
 
 void Cube::hoverEnterEvent(QGraphicsSceneHoverEvent *)
 {
-  qDebug() << "Enter!!";
   highlight();
 }
 
 void Cube::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
 {
-  qDebug() << "Leave!!";
   unhighlight();
+}
+
+void Cube::setText(const QString &text)
+{
+  font.setStyleStrategy(QFont::ForceOutline);
+  Cube::text = text;
+  emit textChanged(corx, cory, text);
+  update();
+}
+
+QFont& Cube::rFont()
+{
+  return font;
+}
+
+int& Cube::rx()
+{
+  return corx;
+}
+
+int& Cube::ry()
+{
+  return cory;
 }

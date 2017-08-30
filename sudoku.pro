@@ -34,3 +34,8 @@ HEADERS += \
     mainwindow.h \
     constants.h \
     gamecontroller.h
+
+RESOURCES += \
+    resources.qrc
+
+FORMS +=

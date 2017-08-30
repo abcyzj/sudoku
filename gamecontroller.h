@@ -3,8 +3,10 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QFont>
 
 class QGraphicsScene;
+class QWidget;
 
 class GameController : public QObject
 {
@@ -18,9 +20,13 @@ public slots:
 
 private:
   void addCubes();
+  QFont getFont(const QString &fontFile);
 
-  QGraphicsScene *scene;
+  QGraphicsScene *mainScene;
+  QWidget *timerScene;
+  QWidget *selectorScene;
   QTimer timer;
+  QFont font;
 };
 
 #endif // GAMECONTROLLER_H
