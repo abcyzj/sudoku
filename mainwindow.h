@@ -12,16 +12,24 @@ class MainWindow : public QMainWindow
 {
   Q_OBJECT
 
+  friend class GameController;
+
 public:
   MainWindow(QWidget *parent = 0);
   virtual ~MainWindow();
 
 private:
+  void initWidgets();
   void initScene();
   void initView();
 
-  QGraphicsScene *scene;
-  QGraphicsView *view;
+  QWidget *gameArea;
+  QGraphicsScene *mainScene;
+  QGraphicsView *mainView;
+  QGraphicsScene *timerScene;
+  QGraphicsView *timerView;
+  QGraphicsScene *controlScene;
+  QGraphicsView *controlView;
   GameController *controller;
 };
 

@@ -27,13 +27,17 @@ SOURCES += \
         main.cpp \
     cube.cpp \
     mainwindow.cpp \
-    gamecontroller.cpp
+    gamecontroller.cpp \
+    pixbutton.cpp \
+    timetag.cpp
 
 HEADERS += \
     cube.h \
     mainwindow.h \
     constants.h \
-    gamecontroller.h
+    gamecontroller.h \
+    pixbutton.h \
+    timetag.h
 
 RESOURCES += \
     resources.qrc

@@ -90,12 +90,27 @@ void Cube::hoverLeaveEvent(QGraphicsSceneHoverEvent *)
   unhighlight();
 }
 
+void Cube::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+  Q_UNUSED(event)
+  emit clicked(corx, cory);
+}
+
 void Cube::setText(const QString &text)
 {
   font.setStyleStrategy(QFont::ForceOutline);
   Cube::text = text;
-  emit textChanged(corx, cory, text);
+  value = 0;
   update();
+  emit textChanged(corx, cory, text);
+}
+
+void Cube::setValue(const int &value)
+{
+  Cube::value = value;
+  text = QString::number(value);
+  update();
+  emit valueChanged(corx, cory, value);
 }
 
 QFont& Cube::rFont()
@@ -111,4 +126,9 @@ int& Cube::rx()
 int& Cube::ry()
 {
   return cory;
+}
+
+int Cube::getValue()
+{
+  return value;
 }
