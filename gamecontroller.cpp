@@ -3,6 +3,7 @@
 #include "pixbutton.h"
 #include "timetag.h"
 #include "recordmaintainer.h"
+#include "sudokusolver.h"
 #include "constants.h"
 
 #include "mainwindow.h"
@@ -12,8 +13,12 @@
 #include <QFontDatabase>
 #include <QFile>
 #include <QTextStream>
+#include <QThread>
 
 #include <QMessageBox>
+#include <QFileDialog>
+
+#include <QDebug>
 
 static const QColor normalColor(Qt::red);
 static const QColor hightlightColor(Qt::blue);
@@ -252,6 +257,82 @@ void GameController::finishGame()
                            tr("你在") + timetag->text() + "内完成了这个数独", QMessageBox::Ok);
 }
 
+void GameController::inputMode()
+{
+  if(gameStatus == GAMING || gameStatus == STOPPED) {
+      if(QMessageBox::information(gameArea, tr("您有尚未结束的游戏"), tr("您的游戏尚未完成，确定要放弃？"),
+                                  QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Cancel) {
+          return;
+        }
+    }
+
+  initGame();
+  if(mainScene->items().contains(m_welcomeText))
+    mainScene->removeItem(m_welcomeText);
+
+  foreach (Cube *cube, m_cubes) {
+      cube->setEnabled(true);
+      cube->init();
+    }
+
+  if(QMessageBox::information(gameArea, tr("要从文件中读取数独吗"), tr("单击确定将从文件中读取数独"),
+                              QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Ok) {
+      QString filePath = QFileDialog::getOpenFileName(gameArea, tr("选择游戏文件"), ".", tr("Sudoku File (*.sudo)"));
+      loadGameFromFile(filePath);
+    }
+
+  foreach(Cube *selector, m_selectors) {
+      selector->setEnabled(true);
+      selector->unhighlight();
+    }
+  gameStatus = INPUT;
+}
+
+void GameController::solveSudoku()
+{
+  if(gameStatus != INPUT) {
+      QMessageBox::information(gameArea, tr("请先输入数独"), tr("您尚未给出要解答的题目，请点击输入按钮"));
+      return;
+    }
+
+  QMessageBox::information(gameArea, tr("提示"), tr("即将开始求解"));
+
+  QThread *solvingThread = new QThread(this);
+  SudokuSolver *solver = new SudokuSolver();
+
+  solver->moveToThread(solvingThread);
+  connect(this, &GameController::startSolving, solver, &SudokuSolver::setData);
+  connect(solver, &SudokuSolver::solvingFinished, [=](QStringList results) {
+    solvingThread->quit();
+    displayMode(results.first());
+  });
+  solvingThread->start();
+  emit startSolving(outputCurrenPanel());
+
+  foreach(Cube *cube, m_cubes) {
+      cube->setEnabled(false);
+    }
+
+  gameStatus = SOLVING;
+}
+
+void GameController::displayMode(const QString &content)
+{
+  if(gameStatus != SOLVING) {
+      return;
+    }
+
+  parseGameData(content);
+  foreach(Cube *cube, m_cubes) {
+      cube->setEnabled(false);
+    }
+  foreach(Cube *selector, m_selectors) {
+      selector->setEnabled(false);
+    }
+
+  gameStatus = DISPLAY;
+}
+
 void GameController::backStep()
 {
   recordMaintainer->backout();
@@ -264,7 +345,7 @@ void GameController::forwardStep()
 
 void GameController::deleteSelectedCube()
 {
-  if(gameStatus != GAMING || selectedCube->getIsBound()) {
+  if((gameStatus != GAMING || selectedCube->getIsBound()) && gameStatus != INPUT) {
       return;
     }
 
@@ -312,7 +393,7 @@ bool GameController::parseGameData(const QString &data)
 {
   QStringList list = data.split(',', QString::KeepEmptyParts);
   if(list.length() != 82) {
-      QMessageBox::information(gameArea, tr("解析错误"), tr("游戏文件中包含的方格数目有误"));
+      QMessageBox::information(gameArea, tr("解析错误"), tr("文件中包含的方格数目有误"));
       return false;
     }
 
@@ -328,7 +409,7 @@ bool GameController::parseGameData(const QString &data)
   return true;
 }
 
-GameController::Staus GameController::status()
+GameController::Status GameController::status()
 {
   return gameStatus;
 }
@@ -444,4 +525,14 @@ void GameController::unhighlightByValue(int value)
           m_cubes[i]->unhighlightFixed();
         }
     }
+}
+
+QString GameController::outputCurrenPanel()
+{
+  QString output;
+  for(int i = 0; i < SUDOKU_ORDER * SUDOKU_ORDER; i++) {
+      output.append(QString::number(m_cubes[i]->getValue()) + ',');
+    }
+  qDebug() << output;
+  return output;
 }

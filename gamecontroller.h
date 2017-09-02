@@ -15,17 +15,20 @@ class TimeTag;
 class QGraphicsTextItem;
 class PixButton;
 class RecordMaintainer;
+class SudokuSolver;
 
 class GameController : public QObject
 {
   Q_OBJECT
 
-  enum Staus {
+  enum Status {
     GAMING,
     INITIAL,
     STOPPED,
     OVER,
-    NOGAMEMODE
+    INPUT,
+    DISPLAY,
+    SOLVING
   };
 
   friend class RecordMaintainer;
@@ -34,7 +37,8 @@ public:
   explicit GameController(QGraphicsScene *mainScene, QGraphicsScene *timerScene, QGraphicsScene *selectorScene, QWidget *gameArea, QObject *parent = nullptr);
   virtual ~GameController();
 
-  Staus status();
+  Status status();
+  QString outputCurrenPanel();
 
 //signals:
 //  void gameOver();
@@ -46,12 +50,18 @@ public slots:
   void resumeGame();
   void restartGame();
   void finishGame();
+  void inputMode();
+  void solveSudoku();
+  void displayMode(const QString &content);
   void backStep();
   void forwardStep();
   void deleteSelectedCube();
   void onCubeClicked(Cube *cube);
   void onCubeValueChanged(Cube *cube, int formerValue);
   void onSelectorClicked(Cube *selector);
+
+signals:
+  void startSolving(QString data);
 
 private:
   void initMainScene();
@@ -82,7 +92,7 @@ private:
 
   QVector<Cube*> m_cubes;
   QVector<Cube*> m_selectors;
-  Staus gameStatus;
+  Status gameStatus;
   Cube *selectedCube;
   int valueSetNum;
   QString currentGameFile;
@@ -96,6 +106,7 @@ private:
   PixButton *deleteButton;
   PixButton *restartButton;
   RecordMaintainer *recordMaintainer;
+  SudokuSolver *solver;
 };
 
 #endif // GAMECONTROLLER_H

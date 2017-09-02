@@ -22,6 +22,8 @@ public:
 public slots:
   void openGameFile();
   void selectLevel();
+  void switchToInputMode();
+  void startSolving();
 
 private:
   void initWidgets();

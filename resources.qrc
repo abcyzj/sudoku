@@ -24,5 +24,7 @@
         <file>gameFiles/game13.sudo</file>
         <file>gameFiles/game14.sudo</file>
         <file>gameFiles/game15.sudo</file>
+        <file>icons/input.png</file>
+        <file>icons/submit.png</file>
     </qresource>
 </RCC>

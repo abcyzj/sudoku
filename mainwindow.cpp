@@ -45,9 +45,18 @@ void MainWindow::initToolBar()
   selectAction->setShortcut(QKeySequence::Save);
   connect(selectAction, &QAction::triggered, this, &MainWindow::selectLevel);
 
+  QAction *inputAction = new QAction(QIcon(":/icons/input.png"), tr("输入数独"), this);
+  selectAction->setShortcut(QKeySequence::Paste);
+  connect(inputAction, &QAction::triggered, this, &MainWindow::switchToInputMode);
+
+  QAction *submitAction = new QAction(QIcon(":/icons/submit.png"), tr("开始求解"), this);
+  connect(submitAction, &QAction::triggered, this, &MainWindow::startSolving);
+
   toolBar = addToolBar(tr("游戏"));
   toolBar->addAction(loadAction);
   toolBar->addAction(selectAction);
+  toolBar->addAction(inputAction);
+  toolBar->addAction(submitAction);
 }
 
 void MainWindow::initScene()
@@ -90,4 +99,14 @@ void MainWindow::selectLevel()
       QString gameFilePath = QString(":/gameFiles/game") + QString::number(ui.levelSelector->value()) + ".sudo";
       controller->startGame(gameFilePath);
     }
+}
+
+void MainWindow::switchToInputMode()
+{
+  controller->inputMode();
+}
+
+void MainWindow::startSolving()
+{
+  controller->solveSudoku();
 }

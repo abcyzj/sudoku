@@ -30,7 +30,8 @@ SOURCES += \
     gamecontroller.cpp \
     pixbutton.cpp \
     timetag.cpp \
-    recordmaintainer.cpp
+    recordmaintainer.cpp \
+    sudokusolver.cpp
 
 HEADERS += \
     cube.h \
@@ -39,7 +40,8 @@ HEADERS += \
     gamecontroller.h \
     pixbutton.h \
     timetag.h \
-    recordmaintainer.h
+    recordmaintainer.h \
+    sudokusolver.h
 
 RESOURCES += \
     resources.qrc

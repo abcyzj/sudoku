@@ -313,9 +313,7 @@ bool Cube::isFocused()
 
 void Cube::init()
 {
-  if(gotFocus) {
-      toggleHighlightFixed();
-    }
+  unhighlightFixed();
   gotFocus = false;
   isBound = false;
   clearNumbers();
