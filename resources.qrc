@@ -26,5 +26,6 @@
         <file>gameFiles/game15.sudo</file>
         <file>icons/input.png</file>
         <file>icons/submit.png</file>
+        <file>icons/generate.png</file>
     </qresource>
 </RCC>

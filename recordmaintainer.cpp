@@ -103,3 +103,13 @@ void RecordMaintainer::unperformRecord(const Record &record)
 
   status = Recording;
 }
+
+void RecordMaintainer::sleep()
+{
+  status = SLEEPING;
+}
+
+void RecordMaintainer::wake()
+{
+  status = Recording;
+}

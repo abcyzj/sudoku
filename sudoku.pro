@@ -47,4 +47,5 @@ RESOURCES += \
     resources.qrc
 
 FORMS += \
-    selectleveldialog.ui
+    selectleveldialog.ui \
+    genleveldialog.ui

@@ -22,7 +22,8 @@ class RecordMaintainer : public QObject
 
   enum Status {
     Performing,
-    Recording
+    Recording,
+    SLEEPING
   };
 
 public:
@@ -30,6 +31,8 @@ public:
 
   void backout();
   void forward();
+  void sleep();
+  void wake();
 
 public slots:
   void addRemoveRecord(Cube *cube, int set);

@@ -52,11 +52,15 @@ void MainWindow::initToolBar()
   QAction *submitAction = new QAction(QIcon(":/icons/submit.png"), tr("开始求解"), this);
   connect(submitAction, &QAction::triggered, this, &MainWindow::startSolving);
 
+  QAction *genAction = new QAction(QIcon(":/icons/generate.png"), tr("随机生成数独"), this);
+  connect(genAction, &QAction::triggered, this, &MainWindow::startGenerating);
+
   toolBar = addToolBar(tr("游戏"));
   toolBar->addAction(loadAction);
   toolBar->addAction(selectAction);
   toolBar->addAction(inputAction);
   toolBar->addAction(submitAction);
+  toolBar->addAction(genAction);
 }
 
 void MainWindow::initScene()
@@ -109,4 +113,9 @@ void MainWindow::switchToInputMode()
 void MainWindow::startSolving()
 {
   controller->solveSudoku();
+}
+
+void MainWindow::startGenerating()
+{
+  controller->generateSudoku();
 }

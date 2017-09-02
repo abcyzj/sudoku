@@ -20,6 +20,7 @@ public:
   int& rx();//坐标系中的位置
   int& ry();
   bool getIsBound();
+  void cancleBound();
   bool isFocused();
 
   QRectF boundingRect() const;

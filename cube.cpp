@@ -318,3 +318,8 @@ void Cube::init()
   isBound = false;
   clearNumbers();
 }
+
+void Cube::cancleBound()
+{
+  isBound = false;
+}

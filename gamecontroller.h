@@ -28,7 +28,8 @@ class GameController : public QObject
     OVER,
     INPUT,
     DISPLAY,
-    SOLVING
+    SOLVING,
+    GENERATING
   };
 
   friend class RecordMaintainer;
@@ -53,6 +54,7 @@ public slots:
   void inputMode();
   void solveSudoku();
   void displayMode(const QString &content);
+  void generateSudoku();
   void backStep();
   void forwardStep();
   void deleteSelectedCube();
@@ -106,7 +108,6 @@ private:
   PixButton *deleteButton;
   PixButton *restartButton;
   RecordMaintainer *recordMaintainer;
-  SudokuSolver *solver;
 };
 
 #endif // GAMECONTROLLER_H

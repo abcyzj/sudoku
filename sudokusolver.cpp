@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include <QDebug>
+#include <QThread>
 
 SudokuSolver::SudokuSolver(QObject *parent)
   : QObject(parent),
@@ -11,6 +12,8 @@ SudokuSolver::SudokuSolver(QObject *parent)
 
 void SudokuSolver::setData(const QString &data)
 {
+  qDebug() << "Solving thread:" << QThread::currentThread();
+  qDebug() << "Got data:" << data;
   QStringList list = data.split(',');
   Q_ASSERT(list.length() == 82);
 

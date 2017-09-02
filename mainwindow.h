@@ -24,6 +24,7 @@ public slots:
   void selectLevel();
   void switchToInputMode();
   void startSolving();
+  void startGenerating();
 
 private:
   void initWidgets();

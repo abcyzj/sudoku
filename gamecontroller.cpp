@@ -5,6 +5,7 @@
 #include "recordmaintainer.h"
 #include "sudokusolver.h"
 #include "constants.h"
+#include "ui_genleveldialog.h"
 
 #include "mainwindow.h"
 
@@ -17,6 +18,8 @@
 
 #include <QMessageBox>
 #include <QFileDialog>
+
+#include <algorithm>
 
 #include <QDebug>
 
@@ -159,8 +162,6 @@ void GameController::initConnections()
   foreach(Cube *selector, m_selectors) {
       connect(selector, &Cube::clicked, this, &GameController::onSelectorClicked);
     }
-
-  //TODO
 }
 
 void GameController::initGame()
@@ -302,13 +303,20 @@ void GameController::solveSudoku()
 
   solver->moveToThread(solvingThread);
   connect(this, &GameController::startSolving, solver, &SudokuSolver::setData);
-  connect(solver, &SudokuSolver::solvingFinished, [=](QStringList results) {
+  connect(solver, &SudokuSolver::solvingFinished, this, [=](QStringList results) {
     solvingThread->quit();
+    if(results.isEmpty()) {
+        QMessageBox::information(gameArea, tr("额"), tr("似乎这个数独没有解呢"));
+        return;
+      }
     displayMode(results.first());
   });
   solvingThread->start();
   emit startSolving(outputCurrenPanel());
-
+  if(gameStatus == SOLVING) {
+      QMessageBox::information(gameArea, tr("走开"), tr("还在求解呢"));
+      return;
+    }
   foreach(Cube *cube, m_cubes) {
       cube->setEnabled(false);
     }
@@ -331,6 +339,75 @@ void GameController::displayMode(const QString &content)
     }
 
   gameStatus = DISPLAY;
+}
+
+void GameController::generateSudoku()
+{
+  if(gameStatus == GAMING || gameStatus == STOPPED) {
+      if(QMessageBox::information(gameArea, tr("别开小差"), tr("嘿，这盘游戏还没完呢，确定不玩了？"),
+                               QMessageBox::Ok, QMessageBox::Cancel) == QMessageBox::Cancel) {
+          return;
+        }
+      stopGame();
+    }
+
+  if(gameStatus == SOLVING) {
+      QMessageBox::information(gameArea, tr("走开"), tr("还在求解呢"));
+      return;
+    }
+
+  if(gameStatus == GENERATING) {
+      QMessageBox::information(gameArea, tr("走开"), tr("正在生成中，别急"));
+      return;
+    }
+
+  QDialog dialog(gameArea);
+  Ui::Dialog ui;
+  ui.setupUi(&dialog);
+  dialog.exec();
+  int difficultyLevel = ui.genLevelSelector->text().toInt();
+
+  int seed[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
+  srand(time(NULL));
+  std::random_shuffle(seed, seed + 9);
+  QString seedString;
+  for(int i = 0; i < 9; i++) {
+      seedString.append(QString::number(seed[i]) + ',');
+    }
+  for(int i = 0; i < 81 - 9; i++) {
+      seedString.append(" ,");
+    }
+  QThread *genThread = new QThread(this);
+  SudokuSolver *generator = new SudokuSolver();
+  generator->moveToThread(genThread);
+
+  connect(this, &GameController::startSolving, generator, &SudokuSolver::setData);
+  connect(generator, &SudokuSolver::solvingFinished, this, [=](QStringList results) {
+      genThread->quit();
+      initGame();
+      if(mainScene->items().contains(m_welcomeText))
+        mainScene->removeItem(m_welcomeText);
+
+      foreach(Cube *cube, m_cubes) {
+          cube->setEnabled(true);
+        }
+      parseGameData(results.first());
+      srand(time(NULL));
+      recordMaintainer->sleep();
+      for(int i = 0; i < difficultyLevel * 15; i++) {
+          int index = rand() % 81;
+          m_cubes[index]->clearNumbers();
+          m_cubes[index]->cancleBound();
+        }
+      recordMaintainer->wake();
+      timetag->init();
+      timetag->start();
+      gameStatus = GAMING;
+    });
+  genThread->start();
+  emit startSolving(seedString);
+
+  gameStatus = GENERATING;
 }
 
 void GameController::backStep()
