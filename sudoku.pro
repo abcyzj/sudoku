@@ -29,7 +29,8 @@ SOURCES += \
     mainwindow.cpp \
     gamecontroller.cpp \
     pixbutton.cpp \
-    timetag.cpp
+    timetag.cpp \
+    recordmaintainer.cpp
 
 HEADERS += \
     cube.h \
@@ -37,9 +38,11 @@ HEADERS += \
     constants.h \
     gamecontroller.h \
     pixbutton.h \
-    timetag.h
+    timetag.h \
+    recordmaintainer.h
 
 RESOURCES += \
     resources.qrc
 
-FORMS +=
+FORMS += \
+    selectleveldialog.ui

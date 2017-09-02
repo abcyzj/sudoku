@@ -1,11 +1,28 @@
 <RCC>
-    <qresource prefix="/fonts">
-        <file>Kristen.ttf</file>
-    </qresource>
-    <qresource prefix="/icons">
-        <file>back.png</file>
-        <file>forward.png</file>
-        <file>resume.png</file>
-        <file>stop.png</file>
+    <qresource prefix="/">
+        <file>icons/back.png</file>
+        <file>icons/delete.png</file>
+        <file>icons/forward.png</file>
+        <file>icons/loadGame.png</file>
+        <file>icons/restart.png</file>
+        <file>icons/resume.png</file>
+        <file>icons/selectLevel.png</file>
+        <file>icons/stop.png</file>
+        <file>fonts/Kristen.ttf</file>
+        <file>gameFiles/game1.sudo</file>
+        <file>gameFiles/game2.sudo</file>
+        <file>gameFiles/game3.sudo</file>
+        <file>gameFiles/game4.sudo</file>
+        <file>gameFiles/game5.sudo</file>
+        <file>gameFiles/game6.sudo</file>
+        <file>gameFiles/game7.sudo</file>
+        <file>gameFiles/game8.sudo</file>
+        <file>gameFiles/game9.sudo</file>
+        <file>gameFiles/game10.sudo</file>
+        <file>gameFiles/game11.sudo</file>
+        <file>gameFiles/game12.sudo</file>
+        <file>gameFiles/game13.sudo</file>
+        <file>gameFiles/game14.sudo</file>
+        <file>gameFiles/game15.sudo</file>
     </qresource>
 </RCC>

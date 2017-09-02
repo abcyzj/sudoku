@@ -48,6 +48,7 @@ void TimeTag::updateTime()
 
   setText(QString("%1:%2").arg(fillZero(minutes)).arg(fillZero(seconds)));
   seconds += 1;
+  update();
 }
 
 QString TimeTag::fillZero(int num)

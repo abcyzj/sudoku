@@ -5,6 +5,7 @@
 
 class QGraphicsScene;
 class QGraphicsView;
+class QToolBar;
 
 class GameController;
 
@@ -18,10 +19,15 @@ public:
   MainWindow(QWidget *parent = 0);
   virtual ~MainWindow();
 
+public slots:
+  void openGameFile();
+  void selectLevel();
+
 private:
   void initWidgets();
   void initScene();
   void initView();
+  void initToolBar();
 
   QWidget *gameArea;
   QGraphicsScene *mainScene;
@@ -31,6 +37,7 @@ private:
   QGraphicsScene *controlScene;
   QGraphicsView *controlView;
   GameController *controller;
+  QToolBar *toolBar;
 };
 
 #endif // MAINWINDOW_H
