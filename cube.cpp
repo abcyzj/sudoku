@@ -65,7 +65,7 @@ void Cube::unhighlightFixed()
     }
 
   changeCorlor(normalColor);
-  setAcceptHoverEvents(false);
+  setAcceptHoverEvents(true);
   gotFocus = false;
 }
 
