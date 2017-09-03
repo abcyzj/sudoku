@@ -370,6 +370,7 @@ void GameController::generateSudoku()
   int seed[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
   srand(time(NULL));
   std::random_shuffle(seed, seed + 9);
+  qDebug() << "seed:" << seed;
   QString seedString;
   for(int i = 0; i < 9; i++) {
       seedString.append(QString::number(seed[i]) + ',');
