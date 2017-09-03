@@ -33,7 +33,6 @@ public slots:
   void toggleHighlightFixed();
   void highlightFixed();
   void unhighlightFixed();
-  //void setText(const QString &text = QString());
   void setValue(const int &value); //设置value，numberSelected将会被置为唯一选中
   void bindValue(const int &value); //设置value，不可再更改
   void addNumber(const int &number); //若只有一个选中，将设为value
@@ -42,7 +41,6 @@ public slots:
   void init();//初始化
 
 signals:
-  //void textChanged(int x, int y, QString text);
   void valueChanged(Cube *self, int former);
   void numberAdded(Cube *self, int numberSet);//numberSet是位图
   void numberRemoved(Cube *self, int numberSet);
@@ -60,7 +58,6 @@ private:
   QColor normalColor;
   QColor highlightColor;
   QColor currentColor;
-//  QString text;
   int value; //方格存储的值，只能有一个，0代表无
   bool isBound;//是否已经绑定
   bool numberSelected[9]; //当前选中的数字，将会显示出来

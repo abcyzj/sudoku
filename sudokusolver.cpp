@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-#include <QDebug>
 #include <QThread>
 
 SudokuSolver::SudokuSolver(QObject *parent)
@@ -12,15 +11,13 @@ SudokuSolver::SudokuSolver(QObject *parent)
 
 void SudokuSolver::setData(const QString &data)
 {
-  qDebug() << "Solving thread:" << QThread::currentThread();
-  qDebug() << "Got data:" << data;
   QStringList list = data.split(',');
   Q_ASSERT(list.length() == 82);
 
   for(int i = 0; i < 81; i++) {
-      Cube &currentCube = panel[i % 9][i / 9];
-      currentCube.x = i % 9;
-      currentCube.y = i / 9;
+      Cube &currentCube = panel[i / 9][i % 9];
+      currentCube.x = i / 9;
+      currentCube.y = i % 9;
       bool ok;
       int value = list[i].toInt(&ok);
       if(ok && value) {

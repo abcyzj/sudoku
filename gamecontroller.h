@@ -41,12 +41,10 @@ public:
   Status status();
   QString outputCurrenPanel();
 
-//signals:
-//  void gameOver();
-
 public slots:
   void initGame();
   void startGame(const QString& gameFile);
+  void startGameFromCurrentData();
   void stopGame();
   void resumeGame();
   void restartGame();
@@ -73,8 +71,6 @@ private:
 
   void highlightByValue(int value);
   void unhighlightByValue(int value);
-//  void tackleValueChangedEvent(int x, int y, int value);//处理值变化事件
-//  void tackleCubeHighlight(Cube *cube);//处理cube高亮事件
 
   inline int valueAt(int x, int y);
   inline void setValue(int value, int x, int y);
@@ -98,6 +94,7 @@ private:
   Cube *selectedCube;
   int valueSetNum;
   QString currentGameFile;
+  QString currentGameData;
 
   TimeTag *timetag;
   QGraphicsTextItem *m_welcomeText;

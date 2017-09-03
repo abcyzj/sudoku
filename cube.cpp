@@ -4,7 +4,6 @@
 #include <cstring>
 
 #include <QPainter>
-#include <QDebug>
 
 const Qt::GlobalColor CUBE_FONT_COLOR = Qt::black;
 const Qt::GlobalColor CUBE_BORDER_COLOR = Qt::black;

@@ -1,6 +1,5 @@
 ﻿#include "timetag.h"
 
-#include <QDebug>
 
 TimeTag::TimeTag(QWidget *parent) : QLabel(parent)
 {

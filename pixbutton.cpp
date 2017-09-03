@@ -1,6 +1,5 @@
 ﻿#include "pixbutton.h"
 
-#include <QDebug>
 
 PixButton::PixButton(QPixmap defaultPic, QPixmap highlightPic, QObject *parent)
   : QObject(parent),
@@ -38,7 +37,6 @@ void PixButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void PixButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
   Q_UNUSED(event)
-  qDebug() << "clicked";
   emit clicked();
 }
 

@@ -19,12 +19,12 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
-#include <algorithm>
-
 #include <QDebug>
 
-static const QColor normalColor(Qt::red);
-static const QColor hightlightColor(Qt::blue);
+#include <algorithm>
+
+static const QColor normalColor(84, 255, 159);
+static const QColor hightlightColor(255, 48, 48);
 
 GameController::GameController(QGraphicsScene *scene, QGraphicsScene *timerScene, QGraphicsScene *selectorScene, QWidget *gameArea, QObject *parent)
   : QObject(parent),
@@ -182,6 +182,8 @@ void GameController::initGame()
     }
 
   selectedCube = nullptr;
+  currentGameData = QString();
+  currentGameFile = QString();
   gameStatus = INITIAL;
 }
 
@@ -235,7 +237,23 @@ void GameController::restartGame(){
       return;
     }
 
-  startGame(currentGameFile);
+  if(!currentGameData.isEmpty()) {
+      startGameFromCurrentData();
+    } else {
+      startGame(currentGameFile);
+    }
+}
+
+void GameController::startGameFromCurrentData()
+{
+  foreach(Cube *cube, m_cubes) {
+      cube->init();
+      cube->setEnabled(true);
+    }
+
+  parseGameData(currentGameData);
+  timetag->init();
+  timetag->start();
 }
 
 void GameController::finishGame()
@@ -370,7 +388,6 @@ void GameController::generateSudoku()
   int seed[] = {1, 2, 3, 4, 5, 6, 7, 8, 9};
   srand(time(NULL));
   std::random_shuffle(seed, seed + 9);
-  qDebug() << "seed:" << seed;
   QString seedString;
   for(int i = 0; i < 9; i++) {
       seedString.append(QString::number(seed[i]) + ',');
@@ -403,6 +420,8 @@ void GameController::generateSudoku()
       recordMaintainer->wake();
       timetag->init();
       timetag->start();
+      currentGameData = outputCurrenPanel();
+      qDebug() << currentGameData;
       gameStatus = GAMING;
     });
   genThread->start();
@@ -480,7 +499,7 @@ bool GameController::parseGameData(const QString &data)
   for(int i = 0; i < 81; i++) {
       bool ok;
       int value = list[i].toInt(&ok);
-      if(ok) {//转换成功
+      if(ok && value) {//转换成功
           cubeAt(i % 9, i / 9)->bindValue(value);
         }
     }
@@ -575,10 +594,6 @@ void GameController::onSelectorClicked(Cube *selector)
   selectedCube->addNumber(selector->getValue());
 }
 
-//void GameController::tackleCubeHighlight(Cube *cube)
-//{
-//}
-
 void GameController::highlightByValue(int value)
 {
   if(gameStatus != GAMING || value == 0) {//只在游戏进行时生效，当value为0时同样不做操作
@@ -609,8 +624,7 @@ QString GameController::outputCurrenPanel()
 {
   QString output;
   for(int i = 0; i < SUDOKU_ORDER * SUDOKU_ORDER; i++) {
-      output.append(QString::number(m_cubes[i]->getValue()) + ',');
+      output.append(QString::number(cubeAt(i % 9, i / 9)->getValue()) + ',');
     }
-  qDebug() << output;
   return output;
 }
